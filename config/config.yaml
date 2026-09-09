@@ -1,9 +1,9 @@
-data:
-  raw_path: "data/raw"
-  processed_path: "data/processed"
+paths:
+  raw_data: data/raw
+  processed_data: data/processed
 
 files:
-  output_file: "merged_dataset.parquet"
+  processed_csv: combined_dataset.csv
 
 logging:
-  log_file: "logs/ingestion.log"
+  level: INFO

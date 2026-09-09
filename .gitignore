@@ -1,10 +1,20 @@
+# Virtual Environment
 .venv/
+.venv-1/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Environment variables
 .env
 
+# Logs
+logs/
+
+# Artifacts
+artifacts/
+
+# Dataset
 data/raw/
 data/processed/
-
-logs/
-artifacts/

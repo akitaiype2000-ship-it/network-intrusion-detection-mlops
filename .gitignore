@@ -1,20 +1,26 @@
 # Virtual Environment
 .venv/
 .venv-1/
+.venv-2/
 
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 
-# Environment variables
+# Environment
 .env
 
 # Logs
 logs/
 
-# Artifacts
-artifacts/
+# Artifacts (optional)
+artifacts/*.log
 
-# Dataset
+# Large datasets
 data/raw/
 data/processed/
+data/transformed/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,22 +1,14 @@
-# Virtual Environment
-.venv/
-.venv-1/
-.venv-2/
-
-# Python
-__pycache__/
-*.py[cod]
-
-# Environment Variables
-.env
-
-# Logs
-logs/
-
-# Generated Data
-data/
+# Generated artifacts
 artifacts/
 
-# OS Files
-.DS_Store
-Thumbs.db
+# Ignore data files, but keep DVC metadata
+data/raw/*
+data/processed/*
+data/featured/*
+data/transformed/*
+
+# Keep .dvc files
+!data/raw/*.dvc
+!data/processed/*.dvc
+!data/featured/*.dvc
+!data/transformed/*.dvc

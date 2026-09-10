@@ -1,0 +1,6 @@
+2026-09-10 12:03:11,208 | INFO | Loading training data...
+2026-09-10 12:03:50,247 | INFO | Training Samples : 640,000
+2026-09-10 12:03:50,248 | INFO | Features : 62
+2026-09-10 12:03:52,121 | INFO | Training Random Forest model...
+2026-09-10 12:04:29,977 | INFO | Model training completed.
+2026-09-10 12:04:29,977 | INFO | Model saved to artifacts\model.pkl

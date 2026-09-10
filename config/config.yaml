@@ -3,12 +3,21 @@ paths:
   processed_data: data/processed
   transformed_data: data/transformed
   featured_data: data/featured
+  scaled_data: data/scaled
+  split_data: data/split
+  model: artifacts
 
 files:
   processed_csv: combined_dataset.csv
   transformed_csv: transformed_dataset.csv
   selected_csv: selected_features.csv
-  
+  scaled_csv: scaled_dataset.csv
+  x_train: x_train.csv
+  x_test: x_test.csv
+  y_train: y_train.csv
+  y_test: y_test.csv
+  model_file: model.pkl
+
 logging:
   level: INFO
 

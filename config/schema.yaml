@@ -1,0 +1,7 @@
+target_column: Label
+
+drop_columns:
+  - Flow ID
+  - Src IP
+  - Dst IP
+  - Timestamp

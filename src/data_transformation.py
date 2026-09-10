@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
@@ -109,24 +109,44 @@ class DataTransformation:
 
             chunk_no += 1
 
+            # Drop unwanted columns
             chunk.drop(
                 columns=columns_to_drop,
                 errors="ignore",
                 inplace=True
             )
 
+            # Numeric columns
             numeric_cols = chunk.select_dtypes(
                 include="number"
             ).columns
 
+            # Fill missing values
             chunk[numeric_cols] = chunk[numeric_cols].fillna(
                 chunk[numeric_cols].median()
             )
 
+            # Replace infinity values
+            chunk.replace(
+                [np.inf, -np.inf],
+                np.nan,
+                inplace=True
+            )
+
+            # Fill NaN created from infinity replacement
+            chunk[numeric_cols] = chunk[numeric_cols].fillna(
+                chunk[numeric_cols].median()
+            )
+
+            # Fill any remaining NaN with 0
+            chunk[numeric_cols] = chunk[numeric_cols].fillna(0)
+
+            # Encode labels
             chunk["Label"] = encoder.transform(
                 chunk["Label"]
             )
 
+            # Save chunk
             chunk.to_csv(
                 self.output_file,
                 mode="w" if first_chunk else "a",

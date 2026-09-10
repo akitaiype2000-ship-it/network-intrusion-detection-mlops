@@ -2,11 +2,13 @@ paths:
   raw_data: data/raw
   processed_data: data/processed
   transformed_data: data/transformed
+  featured_data: data/featured
 
 files:
   processed_csv: combined_dataset.csv
   transformed_csv: transformed_dataset.csv
-
+  selected_csv: selected_features.csv
+  
 logging:
   level: INFO
 

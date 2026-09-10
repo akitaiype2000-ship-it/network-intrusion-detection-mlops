@@ -1,0 +1,23 @@
+2026-09-09 15:47:47,965 | INFO | 10 CSV files found.
+
+2026-09-09 15:47:47,965 | INFO | Reading 02-14-2018.csv
+2026-09-09 15:47:49,022 | ERROR | Error reading 02-14-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:49,024 | INFO | Reading 02-15-2018.csv
+2026-09-09 15:47:49,822 | ERROR | Error reading 02-15-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:49,823 | INFO | Reading 02-16-2018.csv
+2026-09-09 15:47:51,873 | ERROR | Error reading 02-16-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:51,874 | INFO | Reading 02-20-2018.csv
+2026-09-09 15:47:52,977 | ERROR | Error reading 02-20-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:52,979 | INFO | Reading 02-21-2018.csv
+2026-09-09 15:47:54,294 | ERROR | Error reading 02-21-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:54,295 | INFO | Reading 02-22-2018.csv
+2026-09-09 15:47:56,235 | ERROR | Error reading 02-22-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:56,238 | INFO | Reading 02-23-2018.csv
+2026-09-09 15:47:58,173 | ERROR | Error reading 02-23-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:58,174 | INFO | Reading 02-28-2018.csv
+2026-09-09 15:47:59,806 | ERROR | Error reading 02-28-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:47:59,810 | INFO | Reading 03-01-2018.csv
+2026-09-09 15:48:01,618 | ERROR | Error reading 03-01-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:48:01,618 | INFO | Reading 03-02-2018.csv
+2026-09-09 15:48:03,486 | ERROR | Error reading 03-02-2018.csv: Error tokenizing data. C error: out of memory
+2026-09-09 15:48:03,583 | INFO | Data ingestion completed successfully.

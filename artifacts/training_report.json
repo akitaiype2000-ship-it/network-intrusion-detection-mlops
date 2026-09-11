@@ -1,0 +1,8 @@
+{
+    "algorithm": "SGDClassifier",
+    "loss": "log_loss",
+    "training_rows": 12986401,
+    "features": 78,
+    "classes": 16,
+    "model_path": "artifacts\\model.pkl"
+}

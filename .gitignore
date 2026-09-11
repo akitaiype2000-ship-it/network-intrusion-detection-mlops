@@ -1,31 +1,38 @@
+# ==========================
 # Generated artifacts
-artifacts/
+# ==========================
+artifacts/*
+!artifacts/*.dvc
+!artifacts/*.json
 
-# Ignore data files, but keep DVC metadata
+# ==========================
 # Ignore large data files
+# ==========================
 data/raw/*.csv
 data/processed/*.csv
 data/transformed/*.csv
 data/featured/*.csv
+data/scaled/*.csv
+data/split/*.csv
 
+# ==========================
 # Track DVC metadata
+# ==========================
 !data/raw/*.dvc
 !data/processed/*.dvc
 !data/transformed/*.dvc
 !data/featured/*.dvc
+!data/scaled/*.dvc
+!data/split/*.dvc
 
-# Artifacts
-artifacts/
-
-# Keep .dvc files
-!data/raw/*.dvc
-!data/processed/*.dvc
-!data/featured/*.dvc
-!data/transformed/*.dvc
+# ==========================
 # Python cache
+# ==========================
 __pycache__/
 *.py[cod]
 
+# ==========================
 # Logs
+# ==========================
 logs/
 *.log

@@ -61,8 +61,7 @@ class ModelTraining:
         model = SGDClassifier(
     loss="log_loss",
     random_state=42,
-    max_iter=1000,
-    tol=1e-3
+   
 )
 
         first_chunk = True

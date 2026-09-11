@@ -14,8 +14,8 @@ class DataIngestion:
         self.processed_path = Path(self.config["paths"]["processed_data"])
 
         self.output_file = (
-            self.processed_path /
-            self.config["files"]["processed_csv"]
+            self.processed_path
+            / self.config["files"]["processed_csv"]
         )
 
         self.processed_path.mkdir(parents=True, exist_ok=True)
@@ -28,6 +28,11 @@ class DataIngestion:
             raise FileNotFoundError("No CSV files found.")
 
         logger.info(f"{len(csv_files)} CSV files found.")
+
+        # Use the first file as the reference schema
+        reference_columns = list(
+            pd.read_csv(csv_files[0], nrows=0).columns
+        )
 
         # Delete previous output if it exists
         if self.output_file.exists():
@@ -50,6 +55,9 @@ class DataIngestion:
                     low_memory=False
                 ):
 
+                    # Keep only reference columns
+                    chunk = chunk.reindex(columns=reference_columns)
+
                     total_rows += len(chunk)
 
                     chunk.to_csv(
@@ -71,6 +79,7 @@ class DataIngestion:
 
             except Exception as e:
                 logger.error(f"Error reading {file.name}: {e}")
+                raise
 
         logger.info("=" * 50)
         logger.info("DATA INGESTION COMPLETED")
@@ -81,7 +90,7 @@ class DataIngestion:
         print("\n====================================")
         print("Data Ingestion Completed Successfully")
         print("====================================")
-        print(f"Total Rows Processed : {total_rows}")
+        print(f"Total Rows Processed : {total_rows:,}")
         print(f"Saved to : {self.output_file}")
 
         return self.output_file

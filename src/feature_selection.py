@@ -1,6 +1,5 @@
 from pathlib import Path
 import json
-
 import pandas as pd
 
 from src.config import read_config
@@ -43,85 +42,165 @@ class FeatureSelection:
 
     def select_features(self):
 
-        logger.info("Starting Feature Selection...")
+        logger.info("=" * 60)
+        logger.info("FEATURE SELECTION STARTED")
+        logger.info("=" * 60)
 
-        df = pd.read_csv(
+        # ----------------------------------------
+        # PASS 1 : Detect constant columns
+        # ----------------------------------------
+
+        logger.info("Pass 1 : Scanning dataset...")
+
+        first_chunk = True
+        candidate_constants = {}
+        total_rows = 0
+
+        for chunk in pd.read_csv(
             self.input_file,
+            chunksize=100000,
             low_memory=False
-        )
+        ):
 
-        original_columns = list(df.columns)
+            total_rows += len(chunk)
 
-        # -------------------------------
-        # Remove constant columns
-        # -------------------------------
+            if first_chunk:
+
+                for col in chunk.columns:
+
+                    candidate_constants[col] = (
+                        chunk[col].nunique(dropna=False) <= 1
+                    )
+
+                first_chunk = False
+
+            else:
+
+                for col in chunk.columns:
+
+                    if candidate_constants[col]:
+
+                        if chunk[col].nunique(dropna=False) > 1:
+
+                            candidate_constants[col] = False
+
+            if total_rows % 1000000 == 0:
+
+                logger.info(
+                    f"Scanned {total_rows:,} rows..."
+                )
 
         constant_columns = [
+
             col
-            for col in df.columns
-            if df[col].nunique() <= 1
+
+            for col, constant in candidate_constants.items()
+
+            if constant and col != "Label"
+
         ]
 
-        df.drop(
-            columns=constant_columns,
-            inplace=True,
-            errors="ignore"
+        logger.info(
+            f"Constant Columns Found : {len(constant_columns)}"
         )
 
-        # -------------------------------
-        # Remove duplicate columns
-        # -------------------------------
+        # ----------------------------------------
+        # PASS 2 : Write cleaned dataset
+        # ----------------------------------------
 
-        duplicate_columns = []
+        logger.info("Pass 2 : Writing cleaned dataset...")
 
-        cols = df.columns
+        first_chunk = True
+        total_rows = 0
 
-        for i in range(len(cols)):
-            for j in range(i + 1, len(cols)):
-                if df[cols[i]].equals(df[cols[j]]):
-                    duplicate_columns.append(cols[j])
+        original_features = None
+        selected_features = None
+        final_feature_names = None
 
-        df.drop(
-            columns=duplicate_columns,
-            inplace=True,
-            errors="ignore"
-        )
+        for chunk in pd.read_csv(
+            self.input_file,
+            chunksize=100000,
+            low_memory=False
+        ):
 
-        # -------------------------------
-        # Save cleaned dataset
-        # -------------------------------
+            if original_features is None:
 
-        df.to_csv(
-            self.output_file,
-            index=False
-        )
+                original_features = len(chunk.columns)
+
+            chunk.drop(
+                columns=constant_columns,
+                inplace=True,
+                errors="ignore"
+            )
+
+            if selected_features is None:
+
+                selected_features = len(chunk.columns)
+
+                final_feature_names = list(chunk.columns)
+
+            chunk.to_csv(
+                self.output_file,
+                mode="w" if first_chunk else "a",
+                header=first_chunk,
+                index=False
+            )
+
+            first_chunk = False
+
+            total_rows += len(chunk)
+
+            if total_rows % 1000000 == 0:
+
+                logger.info(
+                    f"Written {total_rows:,} rows..."
+                )
+
+        # ----------------------------------------
+        # Save report
+        # ----------------------------------------
 
         report = {
-            "original_features": len(original_columns),
-            "selected_features": len(df.columns),
+
+            "rows_processed": total_rows,
+
+            "original_features": original_features,
+
+            "selected_features": selected_features,
+
             "removed_constant_columns": constant_columns,
-            "removed_duplicate_columns": duplicate_columns,
-            "final_features": list(df.columns)
+
+            "final_features": final_feature_names
+
         }
 
-        with open(self.report_file, "w") as f:
-            json.dump(report, f, indent=4)
+        with open(
+            self.report_file,
+            "w"
+        ) as f:
 
-        logger.info("Feature Selection Completed.")
+            json.dump(
+                report,
+                f,
+                indent=4
+            )
 
-        print("\n===================================")
-        print("Feature Selection Completed")
-        print("===================================")
-        print(f"Original Features : {len(original_columns)}")
-        print(f"Selected Features : {len(df.columns)}")
-        print(f"Removed Constant Columns : {len(constant_columns)}")
-        print(f"Removed Duplicate Columns : {len(duplicate_columns)}")
-        print(f"Saved To : {self.output_file}")
-        print(f"Report : {self.report_file}")
+        logger.info("=" * 60)
+        logger.info("FEATURE SELECTION COMPLETED")
+        logger.info("=" * 60)
+
+        print("\n====================================")
+        print("FEATURE SELECTION COMPLETED")
+        print("====================================")
+        print(f"Rows Processed            : {total_rows:,}")
+        print(f"Original Features         : {original_features}")
+        print(f"Selected Features         : {selected_features}")
+        print(f"Removed Constant Columns  : {len(constant_columns)}")
+        print(f"Saved To                  : {self.output_file}")
+        print(f"Report                    : {self.report_file}")
+        print("====================================")
 
 
 if __name__ == "__main__":
 
-    selector = FeatureSelection()
-
-    selector.select_features()
+    FeatureSelection().select_features()

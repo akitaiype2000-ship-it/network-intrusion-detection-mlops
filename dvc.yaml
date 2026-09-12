@@ -1,0 +1,71 @@
+stages:
+
+  ingestion:
+    cmd: python -m src.data_ingestion
+    deps:
+      - src/data_ingestion.py
+      - config/config.yaml
+    outs:
+      - data/processed/combined_dataset.csv
+
+  transformation:
+    cmd: python -m src.data_transformation
+    deps:
+      - src/data_transformation.py
+      - config/config.yaml
+      - data/processed/combined_dataset.csv
+    outs:
+      - data/transformed/transformed_dataset.csv
+
+  feature_selection:
+    cmd: python -m src.feature_selection
+    deps:
+      - src/feature_selection.py
+      - config/config.yaml
+      - data/transformed/transformed_dataset.csv
+    outs:
+      - data/featured/selected_features.csv
+
+  feature_scaling:
+    cmd: python -m src.feature_scaling
+    deps:
+      - src/feature_scaling.py
+      - config/config.yaml
+      - data/featured/selected_features.csv
+    outs:
+      - data/scaled/scaled_dataset.csv
+      - artifacts/scaler.pkl
+
+  data_split:
+    cmd: python -m src.data_split
+    deps:
+      - src/data_split.py
+      - config/config.yaml
+      - data/scaled/scaled_dataset.csv
+    outs:
+      - data/split/x_train.csv
+      - data/split/x_test.csv
+      - data/split/y_train.csv
+      - data/split/y_test.csv
+
+  model_training:
+    cmd: python -m src.model_training
+    deps:
+      - src/model_training.py
+      - config/config.yaml
+      - data/split/x_train.csv
+      - data/split/y_train.csv
+    outs:
+      - artifacts/model.pkl
+      - artifacts/training_report.json
+
+  model_evaluation:
+    cmd: python -m src.model_evaluation
+    deps:
+      - src/model_evaluation.py
+      - config/config.yaml
+      - artifacts/model.pkl
+      - data/split/x_test.csv
+      - data/split/y_test.csv
+    outs:
+      - artifacts/evaluation_report.json

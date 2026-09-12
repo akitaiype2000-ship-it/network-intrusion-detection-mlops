@@ -1,0 +1,170 @@
+schema: '2.0'
+stages:
+  ingestion:
+    cmd: python -m src.data_ingestion
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c0e51a3dc463bd2745e4c0960ca5b2be
+      size: 520
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 6c6299860d139ecdfbd406f0f0878c29
+      size: 2908
+    outs:
+    - path: data/processed/combined_dataset.csv
+      hash: md5
+      md5: 46552369dc5fc7f55d99cf903640d790
+      size: 6755223819
+  transformation:
+    cmd: python -m src.data_transformation
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c0e51a3dc463bd2745e4c0960ca5b2be
+      size: 520
+    - path: data/processed/combined_dataset.csv
+      hash: md5
+      md5: 46552369dc5fc7f55d99cf903640d790
+      size: 6755223819
+    - path: src/data_transformation.py
+      hash: md5
+      md5: a13d68f276e695daeb379bbf3d4375b0
+      size: 4747
+    outs:
+    - path: data/transformed/transformed_dataset.csv
+      hash: md5
+      md5: c1cb746d249496ac319d14e1e210d14b
+      size: 6328767413
+  feature_selection:
+    cmd: python -m src.feature_selection
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c0e51a3dc463bd2745e4c0960ca5b2be
+      size: 520
+    - path: data/transformed/transformed_dataset.csv
+      hash: md5
+      md5: c1cb746d249496ac319d14e1e210d14b
+      size: 6328767413
+    - path: src/feature_selection.py
+      hash: md5
+      md5: d981e0d6552c5b5da02c07f3c762bac6
+      size: 5252
+    outs:
+    - path: data/featured/selected_features.csv
+      hash: md5
+      md5: fd11812e9d20604475c9c5f32544f92e
+      size: 6328679907
+  feature_scaling:
+    cmd: python -m src.feature_scaling
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c0e51a3dc463bd2745e4c0960ca5b2be
+      size: 520
+    - path: data/featured/selected_features.csv
+      hash: md5
+      md5: fd11812e9d20604475c9c5f32544f92e
+      size: 6328679907
+    - path: src/feature_scaling.py
+      hash: md5
+      md5: 4b00fffbdf4645496169acd68cce1aed
+      size: 3855
+    outs:
+    - path: artifacts/scaler.pkl
+      hash: md5
+      md5: cad53ea38ded1358c8e3f88237f8bd7e
+      size: 3927
+    - path: data/scaled/scaled_dataset.csv
+      hash: md5
+      md5: 845b61ca1bfc62437058be01a3e9200f
+      size: 24071571094
+  data_split:
+    cmd: python -m src.data_split
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c0e51a3dc463bd2745e4c0960ca5b2be
+      size: 520
+    - path: data/scaled/scaled_dataset.csv
+      hash: md5
+      md5: 845b61ca1bfc62437058be01a3e9200f
+      size: 24071571094
+    - path: src/data_split.py
+      hash: md5
+      md5: cf1f3ecac0db415754c4ce8d1f5901d1
+      size: 3484
+    outs:
+    - path: data/split/x_test.csv
+      hash: md5
+      md5: be1dad7af1f3ff5a2a02088664421cd9
+      size: 4588954493
+    - path: data/split/x_train.csv
+      hash: md5
+      md5: a7271664f27b06bd4c28cea93e20dd84
+      size: 18355759804
+    - path: data/split/y_test.csv
+      hash: md5
+      md5: 75bf75e65ef5ddcef6c99e38b677f899
+      size: 9850538
+    - path: data/split/y_train.csv
+      hash: md5
+      md5: 3e54471d4799963b0b0d35beea1c4ba5
+      size: 39402501
+  model_training:
+    cmd: python -m src.model_training
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c0e51a3dc463bd2745e4c0960ca5b2be
+      size: 520
+    - path: data/split/x_train.csv
+      hash: md5
+      md5: a7271664f27b06bd4c28cea93e20dd84
+      size: 18355759804
+    - path: data/split/y_train.csv
+      hash: md5
+      md5: 3e54471d4799963b0b0d35beea1c4ba5
+      size: 39402501
+    - path: src/model_training.py
+      hash: md5
+      md5: aa7e8b5baa147767fa7f8ce329f17208
+      size: 3794
+    outs:
+    - path: artifacts/model.pkl
+      hash: md5
+      md5: 0ccbb84df7401de6a6928bc3003511a5
+      size: 12899
+    - path: artifacts/training_report.json
+      hash: md5
+      md5: 622710c15634c7d078c4f6f5378780ae
+      size: 179
+  model_evaluation:
+    cmd: python -m src.model_evaluation
+    deps:
+    - path: artifacts/model.pkl
+      hash: md5
+      md5: 0ccbb84df7401de6a6928bc3003511a5
+      size: 12899
+    - path: config/config.yaml
+      hash: md5
+      md5: c0e51a3dc463bd2745e4c0960ca5b2be
+      size: 520
+    - path: data/split/x_test.csv
+      hash: md5
+      md5: be1dad7af1f3ff5a2a02088664421cd9
+      size: 4588954493
+    - path: data/split/y_test.csv
+      hash: md5
+      md5: 75bf75e65ef5ddcef6c99e38b677f899
+      size: 9850538
+    - path: src/model_evaluation.py
+      hash: md5
+      md5: 1f0e511332817136d54260ab3f36bf20
+      size: 3942
+    outs:
+    - path: artifacts/evaluation_report.json
+      hash: md5
+      md5: b123ba1ddb30d6c00a3ba834f0624da9
+      size: 4709

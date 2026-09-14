@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 import pandas as pd
-
+from datetime import datetime
 from src.config import read_config
 from src.logger import logger
 
@@ -132,13 +132,13 @@ class FeatureSelection:
                 inplace=True,
                 errors="ignore"
             )
-
+            chunk["event_timestamp"] = datetime.now()
             if selected_features is None:
 
                 selected_features = len(chunk.columns)
 
                 final_feature_names = list(chunk.columns)
-
+            
             chunk.to_csv(
                 self.output_file,
                 mode="w" if first_chunk else "a",

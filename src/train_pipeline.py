@@ -4,9 +4,8 @@ from src.data_transformation import DataTransformation
 from src.feature_selection import FeatureSelection
 from src.feature_scaling import FeatureScaling
 from src.data_split import DataSplit
-from src.model_trainer import ModelTrainer
+from src.model_training import ModelTraining
 from src.model_evaluation import ModelEvaluation
-
 from src.logger import logger
 
 
@@ -50,7 +49,7 @@ def run_pipeline():
 
     # Step 7
     print("Step 7: Model Training")
-    ModelTrainer().train()
+    ModelTraining().train()
     print("✓ Completed\n")
 
     # Step 8

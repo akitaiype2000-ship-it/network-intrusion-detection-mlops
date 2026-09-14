@@ -28,16 +28,17 @@ class DataIngestion:
             raise FileNotFoundError("No CSV files found.")
 
         logger.info(f"{len(csv_files)} CSV files found.")
-
+        logger.info("Reading reference columns...")
         # Use the first file as the reference schema
         reference_columns = list(
             pd.read_csv(csv_files[0], nrows=0).columns
         )
-
+        logger.info("Reference columns loaded.")
         # Delete previous output if it exists
         if self.output_file.exists():
+            logger.info("Deleting previous combined dataset...")
             self.output_file.unlink()
-
+        logger.info("Starting file processing...")
         total_rows = 0
         first_chunk = True
 

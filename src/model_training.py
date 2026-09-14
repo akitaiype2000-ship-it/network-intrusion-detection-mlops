@@ -1,3 +1,5 @@
+import mlflow
+import mlflow.sklearn
 from pathlib import Path
 import json
 import joblib
@@ -7,6 +9,8 @@ from sklearn.linear_model import SGDClassifier
 
 from src.config import read_config
 from src.logger import logger
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
+mlflow.set_experiment("Network Intrusion Detection")
 class ModelTraining:
 
     def __init__(self):
@@ -50,93 +54,103 @@ class ModelTraining:
         logger.info("Loading class labels...")
 
         classes = pd.read_csv(
-            self.y_train_file,
-            usecols=["Label"]
-        )["Label"].unique()
+        self.y_train_file,
+        usecols=["Label"]
+    )["Label"].unique()
 
         logger.info(
-            f"Number of Classes : {len(classes)}"
-        )
+        f"Number of Classes : {len(classes)}"
+    )
 
-        model = SGDClassifier(
-    loss="log_loss",
-    random_state=42,
-   
-)
+        with mlflow.start_run():
 
-        first_chunk = True
-
-        total_rows = 0
-
-        logger.info("Training model...")
-        for X_chunk, y_chunk in zip(
-            pd.read_csv(
-                self.X_train_file,
-                chunksize=100000,
-                low_memory=False
-            ),
-            pd.read_csv(
-                self.y_train_file,
-                chunksize=100000,
-                low_memory=False
+            model = SGDClassifier(
+                loss="log_loss",
+                random_state=42
             )
-        ):
 
-            y_chunk = y_chunk["Label"]
+            first_chunk = True
+            total_rows = 0
 
-            if first_chunk:
+            logger.info("Training model...")
 
-                model.partial_fit(
-                    X_chunk,
-                    y_chunk,
-                    classes=classes
+            for X_chunk, y_chunk in zip(
+                pd.read_csv(
+                    self.X_train_file,
+                    chunksize=100000,
+                    low_memory=False
+                ),
+                pd.read_csv(
+                    self.y_train_file,
+                    chunksize=100000,
+                    low_memory=False
                 )
+            ):
 
-                first_chunk = False
+                y_chunk = y_chunk["Label"]
 
-            else:
+                if first_chunk:
 
-                model.partial_fit(
-                    X_chunk,
-                    y_chunk
-                )
+                    model.partial_fit(
+                        X_chunk,
+                        y_chunk,
+                        classes=classes
+                    )
 
-            total_rows += len(X_chunk)
+                    first_chunk = False
 
-            if total_rows % 1000000 == 0:
+                else:
 
-                logger.info(
-                    f"Processed {total_rows:,} rows..."
-                )
-        logger.info("Saving trained model...")
+                    model.partial_fit(
+                     X_chunk,
+                        y_chunk
+                    )
 
-        joblib.dump(
-            model,
-            self.model_file
-        )
-        logger.info(
-    f"Model saved to {self.model_file}"
-)
+                total_rows += len(X_chunk)
 
-        report = {
-            "algorithm": "SGDClassifier",
-            "loss": "log_loss",
-            "training_rows": total_rows,
-            "features": len(X_chunk.columns),
-            "classes": len(classes),
-            "model_path": str(self.model_file)
-        }
+                if total_rows % 1000000 == 0:
 
-        with open(
-            self.report_file,
-            "w"
-        ) as file:
+                    logger.info(
+                        f"Processed {total_rows:,} rows..."
+                    )
 
-            json.dump(
-                report,
-                file,
-                indent=4
+            logger.info("Saving trained model...")
+
+            joblib.dump(
+             model,
+                self.model_file
             )
+
+            mlflow.log_param("algorithm", "SGDClassifier")
+            mlflow.log_param("loss", "log_loss")
+            mlflow.log_param("training_rows", total_rows)
+            mlflow.log_param("features", len(X_chunk.columns))
+            mlflow.log_param("classes", len(classes))
+
+            mlflow.sklearn.log_model(
+                model,
+                "model"
+            )
+
+            report = {
+                "algorithm": "SGDClassifier",
+                "loss": "log_loss",
+                "training_rows": total_rows,
+                "features": len(X_chunk.columns),
+                "classes": len(classes),
+                "model_path": str(self.model_file)
+            }
+
+            with open(
+                    self.report_file,
+                    "w"
+                ) as file:
+
+                    json.dump(
+                        report,
+                        file,
+                        indent=4
+                    )
 
         logger.info("=" * 60)
         logger.info("MODEL TRAINING COMPLETED")

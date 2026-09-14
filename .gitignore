@@ -24,7 +24,8 @@ data/split/*.csv
 !data/featured/*.dvc
 !data/scaled/*.dvc
 !data/split/*.dvc
-
+mlflow.db
+mlruns/
 # ==========================
 # Python cache
 # ==========================

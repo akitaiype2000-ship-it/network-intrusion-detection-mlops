@@ -49,13 +49,13 @@ stages:
       size: 6328767413
     - path: src/feature_selection.py
       hash: md5
-      md5: d981e0d6552c5b5da02c07f3c762bac6
-      size: 5252
+      md5: c178b5be1d6b9f9eb41178954ece00ea
+      size: 5346
     outs:
     - path: data/featured/selected_features.csv
       hash: md5
-      md5: fd11812e9d20604475c9c5f32544f92e
-      size: 6328679907
+      md5: fafeb0690c2bef06b69d6ee111efad25
+      size: 6766970977
   feature_scaling:
     cmd: python -m src.feature_scaling
     deps:

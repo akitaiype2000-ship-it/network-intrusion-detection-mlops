@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from app.schemas import PredictionRequest
 from app.predict import predict
@@ -16,6 +16,12 @@ def home():
 
 @app.post("/predict")
 def predict_intrusion(request: PredictionRequest):
+
+    if len(request.features) != 79:
+        raise HTTPException(
+            status_code=400,
+            detail="Expected exactly 79 features."
+        )
 
     result = predict(request.features)
 

@@ -2,7 +2,12 @@ from fastapi import FastAPI, HTTPException
 from app.schemas import PredictionRequest
 from app.predict import predict
 from app.logger import logger
-
+from prometheus_fastapi_instrumentator import Instrumentator
+app = FastAPI(
+    title="Network Intrusion Detection API",
+    version="1.0"
+)
+Instrumentator().instrument(app).expose(app)
 app = FastAPI(
     title="Network Intrusion Detection API",
     description="""

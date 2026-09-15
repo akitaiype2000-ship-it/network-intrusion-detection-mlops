@@ -126,10 +126,11 @@ class ModelTraining:
             mlflow.log_param("training_rows", total_rows)
             mlflow.log_param("features", len(X_chunk.columns))
             mlflow.log_param("classes", len(classes))
-
+            mlflow.log_metric("training_rows", total_rows)
             mlflow.sklearn.log_model(
-                model,
-                "model"
+                sk_model=model,
+                name="model",
+                registered_model_name="NetworkIntrusionDetectionModel"
             )
 
             report = {

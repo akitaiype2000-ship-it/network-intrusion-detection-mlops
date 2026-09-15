@@ -6,3 +6,6 @@ python-dotenv==1.2.3
 tqdm==4.70.0
 mlflow=3.16.0
 feast
+fastapi=0.141.1
+uvicorn=0.52.4
+pydantic=2.13.5

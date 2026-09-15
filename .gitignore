@@ -1,12 +1,14 @@
 # ==========================
-# Generated artifacts
+# Artifacts
 # ==========================
 artifacts/*
-!artifacts/*.dvc
+!artifacts/model.pkl
+!artifacts/scaler.pkl
 !artifacts/*.json
+!artifacts/*.dvc
 
 # ==========================
-# Ignore large data files
+# Data (ignore large datasets)
 # ==========================
 data/raw/*.csv
 data/processed/*.csv
@@ -15,25 +17,53 @@ data/featured/*.csv
 data/scaled/*.csv
 data/split/*.csv
 
-# ==========================
-# Track DVC metadata
-# ==========================
+# Keep DVC metadata
 !data/raw/*.dvc
 !data/processed/*.dvc
 !data/transformed/*.dvc
 !data/featured/*.dvc
 !data/scaled/*.dvc
 !data/split/*.dvc
-mlflow.db
-mlruns/
+
 # ==========================
-# Python cache
+# MLflow
+# ==========================
+mlruns/
+mlflow.db
+
+# ==========================
+# Python
 # ==========================
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
 
 # ==========================
 # Logs
 # ==========================
 logs/
 *.log
+
+# ==========================
+# IDE
+# ==========================
+.vscode/
+.idea/
+
+# ==========================
+# OS files
+# ==========================
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Environment variables
+# ==========================
+.env
+.env.*

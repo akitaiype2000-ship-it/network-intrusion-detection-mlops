@@ -12,7 +12,12 @@ app = FastAPI(
 def home():
     logger.info("Health check called")
     return {"message": "API is running"}
-
+@app.get("/health")
+def health():
+    logger.info("Health endpoint called")
+    return {
+        "status": "healthy"
+    }
 @app.post("/predict")
 def predict_intrusion(request: PredictionRequest):
 
@@ -24,3 +29,4 @@ def predict_intrusion(request: PredictionRequest):
     logger.info(f"Prediction: {prediction}")
 
     return {"prediction": prediction}
+

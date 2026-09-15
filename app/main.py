@@ -5,7 +5,21 @@ from app.logger import logger
 
 app = FastAPI(
     title="Network Intrusion Detection API",
-    version="1.0"
+    description="""
+A production-ready machine learning API for detecting network intrusions using a trained SGDClassifier.
+
+## Features
+- Predict network traffic labels
+- Health check endpoint
+- Dockerized deployment
+- CI/CD with GitHub Actions
+- Hosted on AWS EC2
+""",
+    version="1.0.0",
+    contact={
+        "name": "Aku",
+        "email": "your-email@example.com"
+    },
 )
 
 @app.get("/")

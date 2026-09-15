@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+
+.git/
+
+.dvc/cache/
+
+logs/
+mlruns/
+
+data/raw/
+data/processed/
+data/transformed/
+data/featured/
+data/scaled/
+data/split/
